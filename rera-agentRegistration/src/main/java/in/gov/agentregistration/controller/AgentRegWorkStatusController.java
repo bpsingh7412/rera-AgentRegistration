@@ -1,5 +1,6 @@
 package in.gov.agentregistration.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -18,16 +19,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import in.gov.agentregistration.constants.CommonConstants;
+import in.gov.agentregistration.model.AgentRegistrationModel;
 import in.gov.agentregistration.model.AgentSaveWorkStatusYTrxModel;
+import in.gov.agentregistration.model.AgentWorkStatusDto;
 import in.gov.agentregistration.model.AgentWorkStatusModel;
 import in.gov.agentregistration.model.DefaulterStatusModel;
 import in.gov.agentregistration.model.ResponseModel;
 import in.gov.agentregistration.model.YearlyStatusDto;
 import in.gov.agentregistration.model.YearlyStatusModel;
 import in.gov.agentregistration.security.AuthUser;
+import in.gov.agentregistration.services.AgentRegistrationService;
 import in.gov.agentregistration.services.AgentWorkStatusService;
 import in.gov.agentregistration.services.YearlyStatusService;
 import in.gov.wf.util.DateUtil;
@@ -46,6 +50,9 @@ public class AgentRegWorkStatusController {
 	@Autowired
 	AgentWorkStatusService agentWorkStatusService;
 
+	@Autowired
+	AgentRegistrationService agService;
+	
 	@Autowired
 	private Environment env;
 
@@ -313,16 +320,41 @@ public class AgentRegWorkStatusController {
 	public ResponseEntity<?> getWorkStatusByYearlyByPrjId(@PathVariable(value = "projectId") Long projectId) {
 		ResponseModel rs = new ResponseModel();
 		List<AgentWorkStatusModel> agentWorkStausList = agentWorkStatusService.findByProjectId(projectId);
-		if (agentWorkStausList != null && agentWorkStausList.size() > 0) {
+		List<AgentWorkStatusDto> dList=new ArrayList<>();
+		if(!agentWorkStausList.isEmpty())
+		{
+			for(AgentWorkStatusModel m:agentWorkStausList) {
+			AgentWorkStatusDto dto = new AgentWorkStatusDto();
+			AgentRegistrationModel regModel = agService.getAgentDetailsById(m.getCreatedBy());
+			dto.setAgentName(regModel.getAgentName());
+			dto.setAgentType(regModel.getAgentType());
+			dto.setCompanyRegistrationNumber(regModel.getCompanyRegistrationNumber());
+			dto.setCreatedBy(m.getCreatedBy());
+			dto.setCreatedOn(m.getCreatedOn());
+			dto.setDateOfIncorporation(regModel.getDateOfIncorporation());
+			dto.setEndDate(m.getEndDate());
+			dto.setStartDate(m.getStartDate());
+			dto.setStatus(m.getStatus());
+			dto.setProjectId(m.getProjectId());
+			dto.setProjectName(m.getProjectName());
+			dto.setProjectRegNo(m.getProjectRegNo());
+			dto.setUnitsList(m.getUnitsList());
+			dto.setPromoterStatus(m.getPromoterStatus());
+			dto.setWorkStatusId(m.getWorkStatusId());
+			dto.setYearlyId(m.getYearlyId());
+			dList.add(dto);
+			}
+		}
+		if (dList != null && dList.size() > 0) {
 			rs.setAgenId(null);
-			rs.setData(agentWorkStausList);
+			rs.setData(dList);
 			rs.setMessage("GET AGENT WORK STATUS YEARLY");
 			rs.setStatus("200");
 		} else {
 			rs.setAgenId(null);
 			rs.setMessage("DATA NOT FOUND");
-			rs.setData(agentWorkStausList);
-			rs.setStatus("400");
+			rs.setData("");
+			rs.setStatus("404");
 		}
 		return ResponseEntity.ok(rs);
 	}
