@@ -76,6 +76,9 @@ public class AgentWorkStatusModel implements Serializable {
 
 	@Column(name = "LAST_MODIFIED_BY")
 	private Long lastModifiedBy;
+	
+	@Column(name = "PROMOTER_STATUS")
+	private String promoterStatus;
 
 	public List<SaleUnitsDetails> getUnitsList() {
 		return unitsList;
@@ -179,6 +182,14 @@ public class AgentWorkStatusModel implements Serializable {
 
 	public void setLastModifiedBy(Long lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public String getPromoterStatus() {
+		return promoterStatus;
+	}
+
+	public void setPromoterStatus(String promoterStatus) {
+		this.promoterStatus = promoterStatus;
 	}
 
 }

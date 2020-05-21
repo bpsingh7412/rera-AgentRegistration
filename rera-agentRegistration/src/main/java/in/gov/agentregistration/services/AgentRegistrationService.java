@@ -1,13 +1,12 @@
 package in.gov.agentregistration.services;
 
+import java.util.Calendar;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import in.gov.agentregistration.exception.ResourceNotFoundException;
+import java.util.Map;
 import in.gov.agentregistration.model.AgentDetailModel;
-import in.gov.agentregistration.model.AgentPaymentDetailModel;
 import in.gov.agentregistration.model.AgentRegistrationModel;
+import in.gov.agentregistration.model.ResponseModel;
+import in.gov.agentregistration.model.YearlyStatusDto;
 
 public interface AgentRegistrationService {
 
@@ -36,5 +35,9 @@ public interface AgentRegistrationService {
 	public List<AgentRegistrationModel> findByAgentAckNo(String no);
 
 	public List<AgentRegistrationModel> findByEmailIdAndStatus(String no, String agentEnquiry);
+
+	public Map<String, String> getFyYearList(Calendar dateOfIncorporation, String[] cut);
+
+	public ResponseModel findAgentListbyFilter(YearlyStatusDto dto);
 
 }

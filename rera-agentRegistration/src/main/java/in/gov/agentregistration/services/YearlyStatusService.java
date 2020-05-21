@@ -2,6 +2,7 @@ package in.gov.agentregistration.services;
 
 import java.util.List;
 
+import in.gov.agentregistration.model.YearlyStatusDto;
 import in.gov.agentregistration.model.YearlyStatusModel;
 
 public interface YearlyStatusService {
@@ -10,4 +11,6 @@ public interface YearlyStatusService {
 	public List<YearlyStatusModel> findByAgentId(Long agentId);
 
 	public YearlyStatusModel getYearlyStatusById(Long yId);
+
+	public List<YearlyStatusDto> getYearlyStatusById(YearlyStatusDto dto);
 }

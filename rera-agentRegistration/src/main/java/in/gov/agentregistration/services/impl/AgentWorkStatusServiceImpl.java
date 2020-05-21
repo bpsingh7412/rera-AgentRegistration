@@ -21,7 +21,6 @@ public class AgentWorkStatusServiceImpl implements AgentWorkStatusService {
 
 	@Override
 	public List<AgentWorkStatusModel> saveList(List<AgentWorkStatusModel> workStatuList) {
-		// TODO Auto-generated method stub
 
 		List<AgentWorkStatusModel> list = new ArrayList<AgentWorkStatusModel>();
 		agentWorkStatusDao.saveAll(workStatuList).iterator().forEachRemaining(list::add);
@@ -30,8 +29,21 @@ public class AgentWorkStatusServiceImpl implements AgentWorkStatusService {
 
 	@Override
 	public List<AgentWorkStatusModel> findByYearlyId(Long yId) {
-		// TODO Auto-generated method stub
 		return agentWorkStatusDao.findByYearlyId(yId);
 	}
 
+	@Override
+	public List<AgentWorkStatusModel> findByProjectId(Long projectId) {
+		return agentWorkStatusDao.findByProjectId(projectId);
+	}
+
+	@Override
+	public AgentWorkStatusModel findByWorkStatusId(Long workStatusId) {
+		return agentWorkStatusDao.findById(workStatusId).get();
+	}
+
+	@Override
+	public AgentWorkStatusModel save(AgentWorkStatusModel model) {
+		return agentWorkStatusDao.save(model);
+	}
 }

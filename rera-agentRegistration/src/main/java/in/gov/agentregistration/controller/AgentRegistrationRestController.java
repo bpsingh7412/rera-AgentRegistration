@@ -3,11 +3,9 @@ package in.gov.agentregistration.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +33,6 @@ import in.gov.agentregistration.model.AgentAuthorizedSignatoryModel;
 import in.gov.agentregistration.model.AgentDetailModel;
 import in.gov.agentregistration.model.AgentRegistrationModel;
 import in.gov.agentregistration.model.DmsModel;
-import in.gov.agentregistration.model.EnquiryTrxModel;
 import in.gov.agentregistration.model.ResponseModel;
 import in.gov.agentregistration.model.UserAccountModel;
 import in.gov.agentregistration.services.AgentRegistrationService;
@@ -93,12 +90,7 @@ public class AgentRegistrationRestController {
 		return ResponseEntity.ok(rs);
 
 	}
-
-
-	/****************************************************************************************************
-	 * getAllPromoterRegistration
-	 ****************************************************************************************************/
-
+	
 	@GetMapping("/all-agent")
 	public ResponseEntity<?> getAllPromoterRegistrationDetails() throws ResourceNotFoundException {
 		List<AgentRegistrationModel> l = new ArrayList<AgentRegistrationModel>();

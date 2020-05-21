@@ -2,21 +2,23 @@ package in.gov.agentregistration.services.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import in.gov.agentregistration.constants.CommonConstants;
 import in.gov.agentregistration.dao.AgentDetailDao;
 import in.gov.agentregistration.dao.AgentRegistrationDao;
-import in.gov.agentregistration.exception.ResourceNotFoundException;
 import in.gov.agentregistration.model.AgentDetailModel;
-import in.gov.agentregistration.model.AgentPaymentDetailModel;
 import in.gov.agentregistration.model.AgentRegistrationModel;
+import in.gov.agentregistration.model.ResponseModel;
+import in.gov.agentregistration.model.YearlyStatusDto;
 import in.gov.agentregistration.services.AgentRegistrationService;
 
 @Service
@@ -114,5 +116,83 @@ public class AgentRegistrationServiceImpl implements AgentRegistrationService {
 		// TODO Auto-generated method stub
 		return dao.findByEmailIdAndStatus(emailId,agentEnquiry);
 	}
+	
+	@Override
+	public  Map<String, String> getFyYearList(Calendar incdt,String[] cut){
+		Map<String, String> map=new HashMap<String, String>();
+		Calendar curr=Calendar.getInstance();
+		curr.set(Calendar.MONTH,Calendar.OCTOBER);
+		Calendar pdt=Calendar.getInstance();
+		if(incdt!=null)
+		pdt.setTime(incdt.getTime());
+		else{
+		pdt.set(Calendar.YEAR,2001);
+		}
+		int date=Integer.parseInt(cut[0]);
+		int month=Integer.parseInt(cut[1])-1;
+		pdt.add(Calendar.YEAR, 1);
+		if(curr.get(Calendar.MONTH)<month ||
+		(curr.get(Calendar.MONTH)==month && curr.get(Calendar.DATE)<date)){
+		curr.add(Calendar.YEAR,-1);
+		}
+		if(pdt.get(Calendar.MONTH)>2){
+		pdt.add(Calendar.YEAR, 1);
+		}
+		if(pdt.get(Calendar.YEAR)<=curr.get(Calendar.YEAR)){
+		map.put("FY3",getParseFY(curr.get(Calendar.YEAR)));
+		}else{
+		map.put("FY3","NA");  
+		}
+		curr.add(Calendar.YEAR,-1);
+		if(pdt.get(Calendar.YEAR)<=curr.get(Calendar.YEAR)){
+		map.put("FY2",getParseFY(curr.get(Calendar.YEAR)));
+		}else{
+		map.put("FY2","NA");  
+		}
+		curr.add(Calendar.YEAR,-1);
+		if(pdt.get(Calendar.YEAR)<=curr.get(Calendar.YEAR)){
+		map.put("FY1",getParseFY(curr.get(Calendar.YEAR)));
+		}else{
+		map.put("FY1","NA");  
+		}
+		return map;
+		}
+	
+	private static String getParseFY(int year)
+    {
+      StringBuffer sb=new StringBuffer();
+      int lst=year%100;
+      year=year-1;
+      sb.append(year).append("-").append(lst);
+      return sb.toString();
+}
 
+	@Override
+	public ResponseModel findAgentListbyFilter(YearlyStatusDto dto) {
+		ResponseModel resp=null;
+		List<YearlyStatusDto> flterData = new ArrayList<>();
+		
+	    if(null==dto.getAgentRegNo()||"".equals(dto.getAgentRegNo()) )	
+	    {
+	    	dto.setAgentRegNo("%");
+	    }
+	    if(null==dto.getAgentName()||"".equals(dto.getAgentName()) )	
+	    {
+	    	dto.setAgentName("%");
+	    }
+	    if(null==dto.getRegType()||"".equals(dto.getRegType()) )	
+	    {
+	    	dto.setRegType("%");
+	    }
+	    if(null==dto.getRegType()||"".equals(dto.getRegType()) )	
+	    {
+	    	dto.setRegType("%");
+	    }
+		Page<AgentRegistrationModel> page= 	null;
+		PageRequest pag=PageRequest.of(dto.getStartWith(),dto.getDataSize());
+		
+		return null;
+	
+	}
+		
 }

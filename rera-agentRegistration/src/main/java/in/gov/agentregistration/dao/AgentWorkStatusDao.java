@@ -10,4 +10,5 @@ import in.gov.agentregistration.model.AgentWorkStatusModel;
 @Repository
 public interface AgentWorkStatusDao extends CrudRepository<AgentWorkStatusModel, Long> {
 	List<AgentWorkStatusModel> findByYearlyId(Long yId);
+	List<AgentWorkStatusModel> findByProjectId(Long projectId);
 }
